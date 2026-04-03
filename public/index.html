@@ -56,6 +56,10 @@
     .financeiro-total { font-size: 38px; font-weight: 800; color: #166534; margin-top: 8px; }
     .financeiro-sub { margin-top: 8px; color: #166534; font-size: 14px; }
     .busca-box { margin-bottom: 16px; }
+    .sugestoes { background: white; border: 1px solid #cbd5e1; border-radius: 12px; margin-top: -6px; margin-bottom: 10px; padding: 0; overflow: hidden; }
+    .sugestoes li { list-style: none; padding: 10px 12px; cursor: pointer; border-bottom: 1px solid #e5e7eb; }
+    .sugestoes li:last-child { border-bottom: none; }
+    .sugestoes li:hover { background: #eff6ff; }
     @media (max-width: 1100px) {
       .layout { grid-template-columns: 1fr; }
       .sidebar { display: none; }
@@ -120,7 +124,7 @@
           <div class="form-grid">
             <input type="hidden" id="osIdEditando">
             <input type="text" id="clienteOS" placeholder="Nome do cliente" oninput="buscarClientes()">
-<ul id="sugestoes" style="background:white; border:1px solid #ccc; border-radius:10px; margin-top:-10px; margin-bottom:10px;"></ul>
+            <ul id="sugestoes" class="sugestoes"></ul>
             <input type="text" id="equipamento" placeholder="Equipamento">
             <input type="text" id="defeito" placeholder="Defeito informado">
             <input type="number" id="valor" placeholder="Valor do serviço">
@@ -148,6 +152,7 @@
 
   <script>
     let listaOrdens = [];
+    let listaClientes = [];
 
     function classeStatus(status) {
       if (status === "Pronto") return "status status-pronto";
@@ -156,10 +161,15 @@
     }
 
     async function cadastrar() {
-      const nome = document.getElementById("nome").value;
-      const telefone = document.getElementById("telefone").value;
+      const nome = document.getElementById("nome").value.trim();
+      const telefone = document.getElementById("telefone").value.trim();
 
-      await fetch("http://localhost:3000/clientes", {
+      if (!nome || !telefone) {
+        alert("Preencha nome e telefone.");
+        return;
+      }
+
+      await fetch("/clientes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ nome, telefone })
@@ -167,11 +177,13 @@
 
       document.getElementById("nome").value = "";
       document.getElementById("telefone").value = "";
-      carregar();
+
+      await carregar();
+      await carregarClientesParaBusca();
     }
 
     async function carregar() {
-      const res = await fetch("http://localhost:3000/clientes");
+      const res = await fetch("/clientes");
       const dados = await res.json();
 
       const lista = document.getElementById("lista");
@@ -190,16 +202,22 @@
 
     async function salvarOS() {
       const id = document.getElementById("osIdEditando").value;
-      const cliente = document.getElementById("clienteOS").value;
-      const equipamento = document.getElementById("equipamento").value;
-      const defeito = document.getElementById("defeito").value;
+      const cliente = document.getElementById("clienteOS").value.trim();
+      const equipamento = document.getElementById("equipamento").value.trim();
+      const defeito = document.getElementById("defeito").value.trim();
       const valor = document.getElementById("valor").value;
+
+      if (!cliente || !equipamento || !defeito) {
+        alert("Preencha cliente, equipamento e defeito.");
+        return;
+      }
 
       const dados = { cliente, equipamento, defeito, valor };
 
       if (id) {
         const osAtual = listaOrdens.find(item => item._id === id);
-        await fetch(`http://localhost:3000/os/${id}`, {
+
+        await fetch(`/os/${id}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -208,7 +226,7 @@
           })
         });
       } else {
-        await fetch("http://localhost:3000/os", {
+        await fetch("/os", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(dados)
@@ -216,8 +234,8 @@
       }
 
       limparFormularioOS();
-      carregarOS();
-      carregarFinanceiro();
+      await carregarOS();
+      await carregarFinanceiro();
     }
 
     function editarOS(id) {
@@ -231,6 +249,7 @@
       document.getElementById("valor").value = os.valor || 0;
       document.getElementById("tituloFormulario").innerText = "Editar Ordem de Serviço";
       document.getElementById("btnSalvarOS").innerText = "Salvar Alterações";
+      document.getElementById("sugestoes").innerHTML = "";
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
@@ -242,22 +261,23 @@
       document.getElementById("valor").value = "";
       document.getElementById("tituloFormulario").innerText = "Nova Ordem de Serviço";
       document.getElementById("btnSalvarOS").innerText = "Criar OS";
+      document.getElementById("sugestoes").innerHTML = "";
     }
 
     async function excluirOS(id) {
       const confirmar = confirm("Deseja excluir esta OS?");
       if (!confirmar) return;
 
-      await fetch(`http://localhost:3000/os/${id}`, {
+      await fetch(`/os/${id}`, {
         method: "DELETE"
       });
 
-      carregarOS();
-      carregarFinanceiro();
+      await carregarOS();
+      await carregarFinanceiro();
     }
 
     async function carregarOS() {
-      const res = await fetch("http://localhost:3000/os");
+      const res = await fetch("/os");
       const dados = await res.json();
 
       listaOrdens = dados;
@@ -311,7 +331,7 @@
       const osAtual = listaOrdens.find(item => item._id === id);
       if (!osAtual) return;
 
-      await fetch(`http://localhost:3000/os/${id}`, {
+      await fetch(`/os/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -323,12 +343,12 @@
         })
       });
 
-      carregarOS();
-      carregarFinanceiro();
+      await carregarOS();
+      await carregarFinanceiro();
     }
 
     async function carregarFinanceiro() {
-      const res = await fetch("http://localhost:3000/financeiro/mes");
+      const res = await fetch("/financeiro/mes");
       const dados = await res.json();
 
       document.getElementById("resumoFinanceiro").innerHTML =
@@ -341,6 +361,37 @@
 
       document.getElementById("totalMes").innerText = totalFormatado;
       document.getElementById("statFinanceiro").innerText = totalFormatado;
+    }
+
+    async function carregarClientesParaBusca() {
+      const res = await fetch("/clientes");
+      listaClientes = await res.json();
+    }
+
+    function buscarClientes() {
+      const texto = document.getElementById("clienteOS").value.toLowerCase().trim();
+      const sugestoes = document.getElementById("sugestoes");
+
+      sugestoes.innerHTML = "";
+
+      if (!texto) return;
+
+      const filtrados = listaClientes.filter(c =>
+        c.nome.toLowerCase().includes(texto)
+      );
+
+      filtrados.forEach(c => {
+        sugestoes.innerHTML += `
+          <li onclick="selecionarCliente('${String(c.nome).replace(/'/g, "\\'")}')">
+            ${c.nome}
+          </li>
+        `;
+      });
+    }
+
+    function selecionarCliente(nome) {
+      document.getElementById("clienteOS").value = nome;
+      document.getElementById("sugestoes").innerHTML = "";
     }
 
     function imprimirOS(id) {
@@ -409,39 +460,7 @@
     carregar();
     carregarOS();
     carregarFinanceiro();
-    let listaClientes = [];
-
-async function carregarClientesParaBusca() {
-  const res = await fetch("http://localhost:3000/clientes");
-  listaClientes = await res.json();
-}
-
-function buscarClientes() {
-  const texto = document.getElementById("clienteOS").value.toLowerCase();
-  const sugestoes = document.getElementById("sugestoes");
-
-  sugestoes.innerHTML = "";
-
-  if (!texto) return;
-
-  const filtrados = listaClientes.filter(c =>
-    c.nome.toLowerCase().includes(texto)
-  );
-
-  filtrados.forEach(c => {
-    sugestoes.innerHTML += `
-      <li style="padding:10px; cursor:pointer;" onclick="selecionarCliente('${c.nome}')">
-        ${c.nome}
-      </li>
-    `;
-  });
-}
-
-function selecionarCliente(nome) {
-  document.getElementById("clienteOS").value = nome;
-  document.getElementById("sugestoes").innerHTML = "";
-}
-carregarClientesParaBusca();
+    carregarClientesParaBusca();
   </script>
 </body>
 </html>
