@@ -9,8 +9,9 @@ app.use(express.json());
 app.use(cors());
 app.use(express.static(path.join(__dirname, "public")));
 
-// conexão com MongoDB Atlas/online
-mongoose.connect(process.env.MONGO_URI || "mongodb://127.0.0.1:27017/assistencia");
+mongoose.connect(
+  process.env.MONGO_URI || "mongodb://127.0.0.1:27017/assistencia"
+);
 
 mongoose.connection.on("connected", () => {
   console.log("Banco conectado 🚀");
@@ -20,7 +21,6 @@ mongoose.connection.on("error", (err) => {
   console.log("Erro no banco:", err);
 });
 
-// modelos
 const Cliente = mongoose.model("Cliente", {
   nome: String,
   telefone: String
@@ -38,7 +38,6 @@ const OS = mongoose.model("OS", {
   }
 });
 
-// rotas clientes
 app.post("/clientes", async (req, res) => {
   try {
     await Cliente.create(req.body);
@@ -57,7 +56,6 @@ app.get("/clientes", async (req, res) => {
   }
 });
 
-// rotas OS
 app.post("/os", async (req, res) => {
   try {
     const novaOS = await OS.create({
@@ -112,7 +110,6 @@ app.delete("/os/:id", async (req, res) => {
   }
 });
 
-// financeiro do mês
 app.get("/financeiro/mes", async (req, res) => {
   try {
     const agora = new Date();
@@ -140,12 +137,10 @@ app.get("/financeiro/mes", async (req, res) => {
   }
 });
 
-// abrir frontend
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-// porta para online
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
