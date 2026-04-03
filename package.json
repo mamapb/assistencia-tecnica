@@ -1,13 +1,13 @@
 {
   "name": "assistencia-tecnica",
   "version": "1.0.0",
-  "description": "",
+  "description": "Sistema de assistência técnica",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "mamapb",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
