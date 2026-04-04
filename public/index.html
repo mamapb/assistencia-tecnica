@@ -72,7 +72,9 @@
 <body>
   <div class="layout">
     <aside class="sidebar">
-      <div class="logo">AT Pro</div>
+      <div class="logo">
+       <img src="logo.png" alt="Logo" style="width: 140px;">
+      </div>
       <div class="logo-sub">Assistência Técnica</div>
       <div class="menu">
         <div class="menu-item">Clientes</div>
@@ -165,7 +167,7 @@
       const telefone = document.getElementById("telefone").value.trim();
 
       if (!nome || !telefone) {
-        alert("Preencha nome e telefone.");
+        window.alert("⚠️ Preencha todos os campos!");
         return;
       }
 
