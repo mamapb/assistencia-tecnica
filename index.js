@@ -27,6 +27,7 @@ const Cliente = mongoose.model("Cliente", {
 });
 
 const OS = mongoose.model("OS", {
+  obs: String,
   cliente: String,
   equipamento: String,
   defeito: String,

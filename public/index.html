@@ -198,6 +198,7 @@
             <ul id="sugestoes" class="sugestoes"></ul>
             <input type="text" id="equipamento" placeholder="Equipamento">
             <input type="text" id="defeito" placeholder="Defeito informado">
+            <input type="text" id="obs" placeholder="Observações (carregador, bolsa, etc)">
             <input type="number" id="valor" placeholder="Valor do serviço">
             <button class="btn-primary" onclick="salvarOS()" id="btnSalvarOS">Criar OS</button>
           </div>
@@ -333,13 +334,14 @@ function fecharAlerta(id) {
       const equipamento = document.getElementById("equipamento").value.trim();
       const defeito = document.getElementById("defeito").value.trim();
       const valor = document.getElementById("valor").value;
+      const obs = document.getElementById("Obs").value;
 
       if (!cliente || !equipamento || !defeito) {
         alert("Preencha cliente, equipamento e defeito.");
         return;
       }
 
-      const dados = { cliente, equipamento, defeito, valor };
+      const dados = { cliente, equipamento, defeito, valor, Obs };
 
       if (id) {
         const osAtual = listaOrdens.find(item => item._id === id);
@@ -440,6 +442,7 @@ function fecharAlerta(id) {
               <div><strong>Cliente:</strong><br>${os.cliente}</div>
               <div><strong>Equipamento:</strong><br>${os.equipamento}</div>
               <div><strong>Defeito:</strong><br>${os.defeito}</div>
+              <div><strong>Obs:</strong><br>${os.obs || "-"}</div>
               <div><strong>Valor:</strong><br>${valorFormatado}</div>
             </div>
 
