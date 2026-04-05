@@ -4,93 +4,387 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Assistência Técnica Pro</title>
-  .alerta-piscando {
-  border: 2px solid red;
-  background: #fee2e2;
-  animation: piscar 1s infinite;
-}
 
-@keyframes piscar {
-  0% { box-shadow: 0 0 0px red; }
-  50% { box-shadow: 0 0 20px red; }
-  100% { box-shadow: 0 0 0px red; }
-}
-
-.alerta-item {
-  background: white;
-  padding: 10px;
-  margin-bottom: 10px;
-  border-left: 5px solid red;
-  border-radius: 10px;
-}
-
-.btn-whatsapp {
-  background: #25d366;
-  color: white;
-  margin-right: 5px;
-}
-
-.btn-fechar {
-  background: gray;
-  color: white;
-}
-  
   <style>
     * { box-sizing: border-box; font-family: "Segoe UI", Arial, sans-serif; }
-    body { margin: 0; background: #f1f5f9; color: #1e293b; }
-    .layout { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
-    .sidebar { background: linear-gradient(180deg, #0f172a, #1e293b); color: white; padding: 24px 18px; }
-    .logo { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
-    .logo-sub { font-size: 13px; color: #cbd5e1; margin-bottom: 30px; }
-    .menu { display: flex; flex-direction: column; gap: 12px; }
-    .menu-item { background: rgba(255,255,255,0.06); padding: 14px 16px; border-radius: 14px; font-size: 14px; color: #e2e8f0; }
-    .content { padding: 28px; }
-    .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; gap: 16px; flex-wrap: wrap; }
-    .topbar h1 { margin: 0; font-size: 30px; color: #0f172a; }
-    .topbar p { margin: 6px 0 0; color: #64748b; font-size: 14px; }
-    .top-info { background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 14px 18px; box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06); font-size: 14px; color: #475569; }
-    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-bottom: 22px; }
-    .stat-card { background: white; border-radius: 20px; padding: 22px; box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06); border: 1px solid #e2e8f0; }
-    .stat-title { color: #64748b; font-size: 14px; margin-bottom: 10px; }
-    .stat-value { font-size: 30px; font-weight: 700; color: #0f172a; }
-    .stat-green .stat-value { color: #15803d; }
-    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
-    .card { background: white; border-radius: 22px; padding: 22px; box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06); border: 1px solid #e2e8f0; }
-    .card h2 { margin-top: 0; margin-bottom: 18px; font-size: 22px; color: #0f172a; }
-    .card h3 { margin-top: 20px; margin-bottom: 12px; font-size: 18px; color: #0f172a; }
-    .full { grid-column: 1 / -1; }
-    .form-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
-    input { width: 100%; border: 1px solid #cbd5e1; background: #f8fafc; border-radius: 14px; padding: 14px 16px; font-size: 14px; outline: none; transition: 0.2s; }
-    input:focus { border-color: #2563eb; background: white; box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12); }
-    button { border: none; border-radius: 14px; padding: 12px 16px; font-weight: 600; font-size: 14px; cursor: pointer; transition: 0.2s; }
-    button:hover { transform: translateY(-1px); }
-    .btn-primary { background: linear-gradient(135deg, #0ea5e9, #0284c7); } color: white; }
-    .btn-warning { background: #f59e0b; color: white; }
-    .btn-success { background: #16a34a; color: white; }
-    .btn-print { background: #334155; color: white; }
-    .btn-edit { background: #7c3aed; color: white; }
-    .btn-delete { background: #dc2626; color: white; }
-    .clientes-lista, .os-lista { list-style: none; margin: 0; padding: 0; }
-    .cliente-item { border: 1px solid #e2e8f0; background: #f8fafc; border-radius: 16px; padding: 14px; margin-bottom: 10px; }
-    .cliente-item strong { display: block; font-size: 15px; color: #0f172a; margin-bottom: 4px; }
-    .os-item { border: 1px solid #e2e8f0; background: #fcfcfd; border-radius: 18px; padding: 16px; margin-bottom: 14px; }
-    .os-topo { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
-    .os-id { font-weight: 700; color: #0f172a; font-size: 15px; }
-    .os-detalhes { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 14px; font-size: 14px; }
-    .os-detalhes div { background: #f8fafc; border-radius: 12px; padding: 10px 12px; border: 1px solid #e2e8f0; }
-    .os-acoes { display: flex; gap: 8px; flex-wrap: wrap; }
-    .status { padding: 7px 12px; border-radius: 999px; font-size: 12px; font-weight: 700; display: inline-block; }
-    .status-recebido { background: #e0f2fe; color: #0369a1; }
-    .status-reparo { background: #fef3c7; color: #b45309; }
-    .status-pronto { background: #dcfce7; color: #15803d; }
-    .financeiro-box { background: linear-gradient(135deg, #ecfdf5, #f0fdf4); border: 1px solid #86efac; }
-    .financeiro-total { font-size: 38px; font-weight: 800; color: #166534; margin-top: 8px; }
-    .financeiro-sub { margin-top: 8px; color: #166534; font-size: 14px; }
-    .busca-box { margin-bottom: 16px; }
-    .sugestoes { background: white; border: 1px solid #cbd5e1; border-radius: 12px; margin-top: -6px; margin-bottom: 10px; padding: 0; overflow: hidden; }
-    .sugestoes li { list-style: none; padding: 10px 12px; cursor: pointer; border-bottom: 1px solid #e5e7eb; }
-    .sugestoes li:last-child { border-bottom: none; }
-    .sugestoes li:hover { background: #eff6ff; }
+
+    body {
+      margin: 0;
+      background: #f1f5f9;
+      color: #1e293b;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      background: linear-gradient(180deg, #0f172a, #1e293b);
+      color: white;
+      padding: 24px 18px;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .logo-sub {
+      font-size: 13px;
+      color: #cbd5e1;
+      margin-bottom: 30px;
+    }
+
+    .menu {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .menu-item {
+      background: rgba(255,255,255,0.06);
+      padding: 14px 16px;
+      border-radius: 14px;
+      font-size: 14px;
+      color: #e2e8f0;
+    }
+
+    .content {
+      padding: 28px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .topbar h1 {
+      margin: 0;
+      font-size: 30px;
+      color: #0f172a;
+    }
+
+    .topbar p {
+      margin: 6px 0 0;
+      color: #64748b;
+      font-size: 14px;
+    }
+
+    .top-info {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 14px 18px;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+      font-size: 14px;
+      color: #475569;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: 20px;
+      padding: 22px;
+      box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
+      border: 1px solid #e2e8f0;
+    }
+
+    .stat-title {
+      color: #64748b;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    .stat-value {
+      font-size: 30px;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .stat-green .stat-value {
+      color: #15803d;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 22px;
+      padding: 22px;
+      box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
+      border: 1px solid #e2e8f0;
+    }
+
+    .card h2 {
+      margin-top: 0;
+      margin-bottom: 18px;
+      font-size: 22px;
+      color: #0f172a;
+    }
+
+    .card h3 {
+      margin-top: 20px;
+      margin-bottom: 12px;
+      font-size: 18px;
+      color: #0f172a;
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    input {
+      width: 100%;
+      border: 1px solid #cbd5e1;
+      background: #f8fafc;
+      border-radius: 14px;
+      padding: 14px 16px;
+      font-size: 14px;
+      outline: none;
+      transition: 0.2s;
+    }
+
+    input:focus {
+      border-color: #2563eb;
+      background: white;
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+    }
+
+    button {
+      border: none;
+      border-radius: 14px;
+      padding: 12px 16px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #0ea5e9, #0284c7);
+      color: white;
+    }
+
+    .btn-warning {
+      background: #f59e0b;
+      color: white;
+    }
+
+    .btn-success {
+      background: #16a34a;
+      color: white;
+    }
+
+    .btn-print {
+      background: #334155;
+      color: white;
+    }
+
+    .btn-edit {
+      background: #7c3aed;
+      color: white;
+    }
+
+    .btn-delete {
+      background: #dc2626;
+      color: white;
+    }
+
+    .btn-whatsapp {
+      background: #25d366;
+      color: white;
+      margin-right: 5px;
+    }
+
+    .btn-fechar {
+      background: gray;
+      color: white;
+    }
+
+    .clientes-lista,
+    .os-lista {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .cliente-item {
+      border: 1px solid #e2e8f0;
+      background: #f8fafc;
+      border-radius: 16px;
+      padding: 14px;
+      margin-bottom: 10px;
+    }
+
+    .cliente-item strong {
+      display: block;
+      font-size: 15px;
+      color: #0f172a;
+      margin-bottom: 4px;
+    }
+
+    .os-item {
+      border: 1px solid #e2e8f0;
+      background: #fcfcfd;
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .os-topo {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .os-id {
+      font-weight: 700;
+      color: #0f172a;
+      font-size: 15px;
+    }
+
+    .os-detalhes {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+      font-size: 14px;
+    }
+
+    .os-detalhes div {
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 10px 12px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .os-acoes {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .status {
+      padding: 7px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      display: inline-block;
+    }
+
+    .status-recebido {
+      background: #e0f2fe;
+      color: #0369a1;
+    }
+
+    .status-reparo {
+      background: #fef3c7;
+      color: #b45309;
+    }
+
+    .status-pronto {
+      background: #dcfce7;
+      color: #15803d;
+    }
+
+    .financeiro-box {
+      background: linear-gradient(135deg, #ecfdf5, #f0fdf4);
+      border: 1px solid #86efac;
+    }
+
+    .financeiro-total {
+      font-size: 38px;
+      font-weight: 800;
+      color: #166534;
+      margin-top: 8px;
+    }
+
+    .financeiro-sub {
+      margin-top: 8px;
+      color: #166534;
+      font-size: 14px;
+    }
+
+    .busca-box {
+      margin-bottom: 16px;
+    }
+
+    .sugestoes {
+      background: white;
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+      margin-top: -6px;
+      margin-bottom: 10px;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .sugestoes li {
+      list-style: none;
+      padding: 10px 12px;
+      cursor: pointer;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .sugestoes li:last-child {
+      border-bottom: none;
+    }
+
+    .sugestoes li:hover {
+      background: #eff6ff;
+    }
+
+    .alerta-piscando {
+      border: 2px solid red;
+      background: #fee2e2;
+      animation: piscar 1s infinite;
+    }
+
+    @keyframes piscar {
+      0% { box-shadow: 0 0 0px red; }
+      50% { box-shadow: 0 0 20px red; }
+      100% { box-shadow: 0 0 0px red; }
+    }
+
+    .alerta-item {
+      background: white;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-left: 5px solid red;
+      border-radius: 10px;
+    }
+
     @media (max-width: 1100px) {
       .layout { grid-template-columns: 1fr; }
       .sidebar { display: none; }
@@ -100,51 +394,52 @@
     }
   </style>
 </head>
+
 <body>
   <div id="loginTela" style="
-  position: fixed;
-  top:0; left:0;
-  width:100%; height:100%;
-  background:#0f172a;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  z-index:9999;
-">
-
-  <div style="
-    background:white;
-    padding:30px;
-    border-radius:20px;
-    width:300px;
-    text-align:center;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: #0f172a;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
   ">
-    <h2>🔐 Acesso ao Sistema</h2>
-
-    <input type="password" id="senhaLogin" placeholder="Digite a senha"
-      style="width:100%; padding:12px; margin-top:10px; border-radius:10px; border:1px solid #ccc;">
-    
-    <button onclick="fazerLogin()" style="
-      margin-top:15px;
-      width:100%;
-      padding:12px;
-      background:#2563eb;
-      color:white;
-      border:none;
-      border-radius:10px;
+    <div style="
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      width: 300px;
+      text-align: center;
     ">
-      Entrar
-    </button>
+      <h2>🔐 Acesso ao Sistema</h2>
 
-    <p id="erroLogin" style="color:red; margin-top:10px;"></p>
+      <input
+        type="password"
+        id="senhaLogin"
+        placeholder="Digite a senha"
+        style="width:100%; padding:12px; margin-top:10px; border-radius:10px; border:1px solid #ccc;"
+      >
+
+      <button
+        onclick="fazerLogin()"
+        style="margin-top:15px; width:100%; padding:12px; background:#2563eb; color:white; border:none; border-radius:10px;"
+      >
+        Entrar
+      </button>
+
+      <p id="erroLogin" style="color:red; margin-top:10px;"></p>
+    </div>
   </div>
-</div>
+
   <div class="layout">
     <aside class="sidebar">
       <div class="logo">
-       <img src="logo.png" alt="Logo" style="width: 140px;">
+        <img src="/logo.png" alt="Logo" style="width: 140px;">
       </div>
       <div class="logo-sub">Assistência Técnica</div>
+
       <div class="menu">
         <div class="menu-item">Clientes</div>
         <div class="menu-item">Ordens de Serviço</div>
@@ -167,10 +462,12 @@
           <div class="stat-title">Clientes cadastrados</div>
           <div class="stat-value" id="statClientes">0</div>
         </div>
+
         <div class="stat-card">
           <div class="stat-title">Ordens cadastradas</div>
           <div class="stat-value" id="statOS">0</div>
         </div>
+
         <div class="stat-card stat-green">
           <div class="stat-title">Total ganho no mês</div>
           <div class="stat-value" id="statFinanceiro">R$ 0,00</div>
@@ -180,6 +477,7 @@
       <section class="grid">
         <div class="card">
           <h2>Cadastrar Cliente</h2>
+
           <div class="form-grid">
             <input type="text" id="nome" placeholder="Nome do cliente">
             <input type="text" id="telefone" placeholder="Telefone">
@@ -192,27 +490,32 @@
 
         <div class="card">
           <h2 id="tituloFormulario">Nova Ordem de Serviço</h2>
+
           <div class="form-grid">
             <input type="hidden" id="osIdEditando">
             <input type="text" id="clienteOS" placeholder="Nome do cliente" oninput="buscarClientes()">
             <ul id="sugestoes" class="sugestoes"></ul>
+
             <input type="text" id="equipamento" placeholder="Equipamento">
             <input type="text" id="defeito" placeholder="Defeito informado">
-             <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:14px; padding:12px;">
+
+            <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:14px; padding:12px;">
               <strong>Itens deixados pelo cliente</strong><br><br>
 
-               <label><input type="checkbox" id="itemCarregador"> Carregador</label><br>
-               <label><input type="checkbox" id="itemBateria"> Bateria</label><br>
-               <label><input type="checkbox" id="itemBolsa"> Bolsa / Case</label><br>
-               <label><input type="checkbox" id="itemCabo"> Cabo</label><br>
-               <label><input type="checkbox" id="itemFonte"> Fonte</label><br>
-               <label><input type="checkbox" id="itemMouse"> Mouse</label><br>
-               <label><input type="checkbox" id="itemOutroCheck"> Outro</label>
+              <label><input type="checkbox" id="itemCarregador"> Carregador</label><br>
+              <label><input type="checkbox" id="itemBateria"> Bateria</label><br>
+              <label><input type="checkbox" id="itemBolsa"> Bolsa / Case</label><br>
+              <label><input type="checkbox" id="itemCabo"> Cabo</label><br>
+              <label><input type="checkbox" id="itemFonte"> Fonte</label><br>
+              <label><input type="checkbox" id="itemMouse"> Mouse</label><br>
+              <label><input type="checkbox" id="itemOutroCheck"> Outro</label>
 
-               <input type="text" id="itemOutroTexto" placeholder="Qual outro item?" style="margin-top:10px;">
-              </div>
+              <input type="text" id="itemOutroTexto" placeholder="Qual outro item?" style="margin-top:10px;">
+            </div>
+
             <input type="text" id="obs" placeholder="Observações (carregador, bolsa, etc)">
             <input type="number" id="valor" placeholder="Valor do serviço">
+
             <button class="btn-primary" onclick="salvarOS()" id="btnSalvarOS">Criar OS</button>
           </div>
         </div>
@@ -223,6 +526,7 @@
           <div class="financeiro-total" id="totalMes">R$ 0,00</div>
           <div class="financeiro-sub">Somando apenas ordens com status Pronto</div>
         </div>
+
         <div class="card alerta-piscando" id="alertasBox">
           <h2>🚨 OS PARADAS (7+ dias)</h2>
           <div id="alertasLista">Carregando...</div>
@@ -230,70 +534,27 @@
 
         <div class="card full">
           <h2>Ordens de Serviço</h2>
+
           <div class="busca-box">
-            <input type="text" id="buscaOS" placeholder="Buscar por cliente, equipamento, defeito ou status" oninput="renderizarOS()">
+            <input
+              type="text"
+              id="buscaOS"
+              placeholder="Buscar por cliente, equipamento, defeito ou status"
+              oninput="renderizarOS()"
+            >
           </div>
+
           <ul class="os-lista" id="listaOS"></ul>
         </div>
       </section>
     </main>
-  </div>function verificarAlertas() {
-  const agora = new Date();
-  const lista = document.getElementById("alertasLista");
-
-  lista.innerHTML = "";
-
-  const atrasadas = listaOrdens.filter(os => {
-    if (os.status === "Pronto") return false;
-
-    const dias = (agora - new Date(os.data)) / (1000 * 60 * 60 * 24);
-    return dias >= 7;
-  });
-
-  if (atrasadas.length === 0) {
-    lista.innerHTML = "Nenhuma OS atrasada ✅";
-    return;
-  }
-
-  atrasadas.forEach(os => {
-    const dias = Math.floor((agora - new Date(os.data)) / (1000 * 60 * 60 * 24));
-
-    lista.innerHTML += `
-      <div class="alerta-item">
-        <strong>${os.cliente}</strong><br>
-        ${os.equipamento}<br>
-        ⏱ ${dias} dias parado<br><br>
-
-        <button class="btn-whatsapp" onclick="abrirWhats('${os.telefone || ""}')">
-          WhatsApp
-        </button>
-
-        <button class="btn-fechar" onclick="fecharAlerta('${os._id}')">
-          Fechar
-        </button>
-      </div>
-    `;
-  });
-}
-
-function abrirWhats(numero) {
-  if (!numero) {
-    alert("Cliente sem telefone");
-    return;
-  }
-
-  const msg = "Olá, seu aparelho está aguardando retorno.";
-  window.open(`https://wa.me/55${numero}?text=${encodeURIComponent(msg)}`);
-}
-
-function fecharAlerta(id) {
-  listaOrdens = listaOrdens.filter(os => os._id !== id);
-  verificarAlertas();
-}
+  </div>
 
   <script>
     let listaOrdens = [];
     let listaClientes = [];
+
+    const SENHA_CORRETA = "25021984";
 
     function classeStatus(status) {
       if (status === "Pronto") return "status status-pronto";
@@ -301,12 +562,33 @@ function fecharAlerta(id) {
       return "status status-recebido";
     }
 
+    function formatarItens(itens) {
+      if (!itens) return "-";
+
+      const lista = [];
+      if (itens.carregador) lista.push("Carregador");
+      if (itens.bateria) lista.push("Bateria");
+      if (itens.bolsa) lista.push("Bolsa / Case");
+      if (itens.cabo) lista.push("Cabo");
+      if (itens.fonte) lista.push("Fonte");
+      if (itens.mouse) lista.push("Mouse");
+      if (itens.outroCheck && itens.outroTexto) lista.push("Outro: " + itens.outroTexto);
+
+      return lista.length ? lista.join(", ") : "-";
+    }
+
+    function obterTelefoneCliente(nomeCliente) {
+      const cliente = listaClientes.find(c => c.nome === nomeCliente);
+      if (!cliente || !cliente.telefone) return "";
+      return String(cliente.telefone).replace(/\D/g, "");
+    }
+
     async function cadastrar() {
       const nome = document.getElementById("nome").value.trim();
       const telefone = document.getElementById("telefone").value.trim();
 
       if (!nome || !telefone) {
-        window.alert("⚠️ Preencha todos os campos!");
+        alert("⚠️ Preencha todos os campos!");
         return;
       }
 
@@ -347,17 +629,18 @@ function fecharAlerta(id) {
       const equipamento = document.getElementById("equipamento").value.trim();
       const defeito = document.getElementById("defeito").value.trim();
       const valor = document.getElementById("valor").value;
+      const obs = document.getElementById("obs").value.trim();
+
       const itens = {
-      carregador: document.getElementById("itemCarregador").checked,
-      bateria: document.getElementById("itemBateria").checked,
-      bolsa: document.getElementById("itemBolsa").checked,
-      cabo: document.getElementById("itemCabo").checked,
-      fonte: document.getElementById("itemFonte").checked,
-      mouse: document.getElementById("itemMouse").checked,
-      outroCheck: document.getElementById("itemOutroCheck").checked,
-      outroTexto: document.getElementById("itemOutroTexto").value.trim()
-    };
-      const obs = document.getElementById("Obs").value;
+        carregador: document.getElementById("itemCarregador").checked,
+        bateria: document.getElementById("itemBateria").checked,
+        bolsa: document.getElementById("itemBolsa").checked,
+        cabo: document.getElementById("itemCabo").checked,
+        fonte: document.getElementById("itemFonte").checked,
+        mouse: document.getElementById("itemMouse").checked,
+        outroCheck: document.getElementById("itemOutroCheck").checked,
+        outroTexto: document.getElementById("itemOutroTexto").value.trim()
+      };
 
       if (!cliente || !equipamento || !defeito) {
         alert("Preencha cliente, equipamento e defeito.");
@@ -386,14 +669,6 @@ function fecharAlerta(id) {
       }
 
       limparFormularioOS();
-      document.getElementById("itemCarregador").checked = false;
-      document.getElementById("itemBateria").checked = false;
-      document.getElementById("itemBolsa").checked = false;
-      document.getElementById("itemCabo").checked = false;
-      document.getElementById("itemFonte").checked = false;
-      document.getElementById("itemMouse").checked = false;
-      document.getElementById("itemOutroCheck").checked = false;
-      document.getElementById("itemOutroTexto").value = "";
       await carregarOS();
       await carregarFinanceiro();
     }
@@ -406,10 +681,22 @@ function fecharAlerta(id) {
       document.getElementById("clienteOS").value = os.cliente;
       document.getElementById("equipamento").value = os.equipamento;
       document.getElementById("defeito").value = os.defeito;
+      document.getElementById("obs").value = os.obs || "";
       document.getElementById("valor").value = os.valor || 0;
+
+      document.getElementById("itemCarregador").checked = !!os.itens?.carregador;
+      document.getElementById("itemBateria").checked = !!os.itens?.bateria;
+      document.getElementById("itemBolsa").checked = !!os.itens?.bolsa;
+      document.getElementById("itemCabo").checked = !!os.itens?.cabo;
+      document.getElementById("itemFonte").checked = !!os.itens?.fonte;
+      document.getElementById("itemMouse").checked = !!os.itens?.mouse;
+      document.getElementById("itemOutroCheck").checked = !!os.itens?.outroCheck;
+      document.getElementById("itemOutroTexto").value = os.itens?.outroTexto || "";
+
       document.getElementById("tituloFormulario").innerText = "Editar Ordem de Serviço";
       document.getElementById("btnSalvarOS").innerText = "Salvar Alterações";
       document.getElementById("sugestoes").innerHTML = "";
+
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
@@ -418,10 +705,20 @@ function fecharAlerta(id) {
       document.getElementById("clienteOS").value = "";
       document.getElementById("equipamento").value = "";
       document.getElementById("defeito").value = "";
+      document.getElementById("obs").value = "";
       document.getElementById("valor").value = "";
       document.getElementById("tituloFormulario").innerText = "Nova Ordem de Serviço";
       document.getElementById("btnSalvarOS").innerText = "Criar OS";
       document.getElementById("sugestoes").innerHTML = "";
+
+      document.getElementById("itemCarregador").checked = false;
+      document.getElementById("itemBateria").checked = false;
+      document.getElementById("itemBolsa").checked = false;
+      document.getElementById("itemCabo").checked = false;
+      document.getElementById("itemFonte").checked = false;
+      document.getElementById("itemMouse").checked = false;
+      document.getElementById("itemOutroCheck").checked = false;
+      document.getElementById("itemOutroTexto").value = "";
     }
 
     async function excluirOS(id) {
@@ -437,13 +734,13 @@ function fecharAlerta(id) {
     }
 
     async function carregarOS() {
-      verificarAlertas();
       const res = await fetch("/os");
       const dados = await res.json();
 
       listaOrdens = dados;
       document.getElementById("statOS").innerText = dados.length;
       renderizarOS();
+      verificarAlertas();
     }
 
     function renderizarOS() {
@@ -452,7 +749,7 @@ function fecharAlerta(id) {
       lista.innerHTML = "";
 
       const filtradas = listaOrdens.filter(os => {
-        const texto = `${os.cliente} ${os.equipamento} ${os.defeito} ${os.status}`.toLowerCase();
+        const texto = `${os.cliente} ${os.equipamento} ${os.defeito} ${os.status} ${os.obs || ""}`.toLowerCase();
         return texto.includes(busca);
       });
 
@@ -473,10 +770,7 @@ function fecharAlerta(id) {
               <div><strong>Cliente:</strong><br>${os.cliente}</div>
               <div><strong>Equipamento:</strong><br>${os.equipamento}</div>
               <div><strong>Defeito:</strong><br>${os.defeito}</div>
-              <div>
-               <strong>Itens:</strong><br>
-              ${formatarItens(os.itens)}
-            </div>
+              <div><strong>Itens:</strong><br>${formatarItens(os.itens)}</div>
               <div><strong>Obs:</strong><br>${os.obs || "-"}</div>
               <div><strong>Valor:</strong><br>${valorFormatado}</div>
             </div>
@@ -505,6 +799,8 @@ function fecharAlerta(id) {
           equipamento: osAtual.equipamento,
           defeito: osAtual.defeito,
           valor: osAtual.valor,
+          obs: osAtual.obs || "",
+          itens: osAtual.itens || {},
           status
         })
       });
@@ -560,6 +856,56 @@ function fecharAlerta(id) {
       document.getElementById("sugestoes").innerHTML = "";
     }
 
+    function verificarAlertas() {
+      const agora = new Date();
+      const lista = document.getElementById("alertasLista");
+      lista.innerHTML = "";
+
+      const atrasadas = listaOrdens.filter(os => {
+        if (os.status === "Pronto") return false;
+        if (!os.data) return false;
+
+        const dias = (agora - new Date(os.data)) / (1000 * 60 * 60 * 24);
+        return dias >= 7;
+      });
+
+      if (atrasadas.length === 0) {
+        lista.innerHTML = "Nenhuma OS atrasada ✅";
+        return;
+      }
+
+      atrasadas.forEach(os => {
+        const dias = Math.floor((agora - new Date(os.data)) / (1000 * 60 * 60 * 24));
+        const telefone = obterTelefoneCliente(os.cliente);
+
+        lista.innerHTML += `
+          <div class="alerta-item">
+            <strong>${os.cliente}</strong><br>
+            ${os.equipamento}<br>
+            ⏱ ${dias} dias parado<br><br>
+
+            <button class="btn-whatsapp" onclick="abrirWhats('${telefone}')">WhatsApp</button>
+            <button class="btn-fechar" onclick="fecharAlerta('${os._id}')">Fechar</button>
+          </div>
+        `;
+      });
+    }
+
+    function abrirWhats(numero) {
+      if (!numero) {
+        alert("Cliente sem telefone cadastrado");
+        return;
+      }
+
+      const msg = "Olá, seu aparelho está aguardando retorno.";
+      window.open(`https://wa.me/55${numero}?text=${encodeURIComponent(msg)}`, "_blank");
+    }
+
+    function fecharAlerta(id) {
+      listaOrdens = listaOrdens.filter(os => os._id !== id);
+      verificarAlertas();
+    }
+
     function imprimirOS(id) {
       const os = listaOrdens.find(item => item._id === id);
       if (!os) {
@@ -595,7 +941,6 @@ function fecharAlerta(id) {
         <body>
           <div class="cabecalho">
             <h1>M4M4 Assistência Técnica</h1>
-            <div class="logo-sub">Notebooks • Manutenção</div>
             <p>Telefone: (83) 98333833</p>
             <p>Patos - PB</p>
           </div>
@@ -607,6 +952,8 @@ function fecharAlerta(id) {
             <p><strong>Cliente:</strong> ${os.cliente}</p>
             <p><strong>Equipamento:</strong> ${os.equipamento}</p>
             <p><strong>Defeito:</strong> ${os.defeito}</p>
+            <p><strong>Itens deixados:</strong> ${formatarItens(os.itens)}</p>
+            <p><strong>Observações:</strong> ${os.obs || "-"}</p>
             <p><strong>Status:</strong> ${os.status}</p>
             <p><strong>Valor:</strong> ${valorFormatado}</p>
 
@@ -624,29 +971,27 @@ function fecharAlerta(id) {
       janela.print();
     }
 
-    carregar();
-    carregarOS();
-    carregarFinanceiro();
-    carregarClientesParaBusca();
-    const SENHA_CORRETA = "25021984"; // MUDE AQUI
+    function fazerLogin() {
+      const senha = document.getElementById("senhaLogin").value;
 
-function fazerLogin() {
-  const senha = document.getElementById("senhaLogin").value;
+      if (senha === SENHA_CORRETA) {
+        document.getElementById("loginTela").style.display = "none";
+        localStorage.setItem("logado", "true");
+      } else {
+        document.getElementById("erroLogin").innerText = "Senha incorreta!";
+      }
+    }
 
-  if (senha === SENHA_CORRETA) {
-    document.getElementById("loginTela").style.display = "none";
-    localStorage.setItem("logado", "true");
-  } else {
-    document.getElementById("erroLogin").innerText = "Senha incorreta!";
-  }
-}
+    window.onload = async () => {
+      if (localStorage.getItem("logado") === "true") {
+        document.getElementById("loginTela").style.display = "none";
+      }
 
-// manter logado
-window.onload = () => {
-  if (localStorage.getItem("logado") === "true") {
-    document.getElementById("loginTela").style.display = "none";
-  }
-};
+      await carregar();
+      await carregarClientesParaBusca();
+      await carregarOS();
+      await carregarFinanceiro();
+    };
   </script>
 </body>
 </html>
