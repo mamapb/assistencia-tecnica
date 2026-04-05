@@ -4,6 +4,37 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Assistência Técnica Pro</title>
+  .alerta-piscando {
+  border: 2px solid red;
+  background: #fee2e2;
+  animation: piscar 1s infinite;
+}
+
+@keyframes piscar {
+  0% { box-shadow: 0 0 0px red; }
+  50% { box-shadow: 0 0 20px red; }
+  100% { box-shadow: 0 0 0px red; }
+}
+
+.alerta-item {
+  background: white;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-left: 5px solid red;
+  border-radius: 10px;
+}
+
+.btn-whatsapp {
+  background: #25d366;
+  color: white;
+  margin-right: 5px;
+}
+
+.btn-fechar {
+  background: gray;
+  color: white;
+}
+  
   <style>
     * { box-sizing: border-box; font-family: "Segoe UI", Arial, sans-serif; }
     body { margin: 0; background: #f1f5f9; color: #1e293b; }
@@ -178,6 +209,10 @@
           <div class="financeiro-total" id="totalMes">R$ 0,00</div>
           <div class="financeiro-sub">Somando apenas ordens com status Pronto</div>
         </div>
+        <div class="card alerta-piscando" id="alertasBox">
+          <h2>🚨 OS PARADAS (7+ dias)</h2>
+          <div id="alertasLista">Carregando...</div>
+        </div>
 
         <div class="card full">
           <h2>Ordens de Serviço</h2>
@@ -188,7 +223,59 @@
         </div>
       </section>
     </main>
-  </div>
+  </div>function verificarAlertas() {
+  const agora = new Date();
+  const lista = document.getElementById("alertasLista");
+
+  lista.innerHTML = "";
+
+  const atrasadas = listaOrdens.filter(os => {
+    if (os.status === "Pronto") return false;
+
+    const dias = (agora - new Date(os.data)) / (1000 * 60 * 60 * 24);
+    return dias >= 7;
+  });
+
+  if (atrasadas.length === 0) {
+    lista.innerHTML = "Nenhuma OS atrasada ✅";
+    return;
+  }
+
+  atrasadas.forEach(os => {
+    const dias = Math.floor((agora - new Date(os.data)) / (1000 * 60 * 60 * 24));
+
+    lista.innerHTML += `
+      <div class="alerta-item">
+        <strong>${os.cliente}</strong><br>
+        ${os.equipamento}<br>
+        ⏱ ${dias} dias parado<br><br>
+
+        <button class="btn-whatsapp" onclick="abrirWhats('${os.telefone || ""}')">
+          WhatsApp
+        </button>
+
+        <button class="btn-fechar" onclick="fecharAlerta('${os._id}')">
+          Fechar
+        </button>
+      </div>
+    `;
+  });
+}
+
+function abrirWhats(numero) {
+  if (!numero) {
+    alert("Cliente sem telefone");
+    return;
+  }
+
+  const msg = "Olá, seu aparelho está aguardando retorno.";
+  window.open(`https://wa.me/55${numero}?text=${encodeURIComponent(msg)}`);
+}
+
+function fecharAlerta(id) {
+  listaOrdens = listaOrdens.filter(os => os._id !== id);
+  verificarAlertas();
+}
 
   <script>
     let listaOrdens = [];
@@ -317,6 +404,7 @@
     }
 
     async function carregarOS() {
+      verificarAlertas();
       const res = await fetch("/os");
       const dados = await res.json();
 
