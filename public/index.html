@@ -198,6 +198,19 @@
             <ul id="sugestoes" class="sugestoes"></ul>
             <input type="text" id="equipamento" placeholder="Equipamento">
             <input type="text" id="defeito" placeholder="Defeito informado">
+             <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:14px; padding:12px;">
+              <strong>Itens deixados pelo cliente</strong><br><br>
+
+               <label><input type="checkbox" id="itemCarregador"> Carregador</label><br>
+               <label><input type="checkbox" id="itemBateria"> Bateria</label><br>
+               <label><input type="checkbox" id="itemBolsa"> Bolsa / Case</label><br>
+               <label><input type="checkbox" id="itemCabo"> Cabo</label><br>
+               <label><input type="checkbox" id="itemFonte"> Fonte</label><br>
+               <label><input type="checkbox" id="itemMouse"> Mouse</label><br>
+               <label><input type="checkbox" id="itemOutroCheck"> Outro</label>
+
+               <input type="text" id="itemOutroTexto" placeholder="Qual outro item?" style="margin-top:10px;">
+              </div>
             <input type="text" id="obs" placeholder="Observações (carregador, bolsa, etc)">
             <input type="number" id="valor" placeholder="Valor do serviço">
             <button class="btn-primary" onclick="salvarOS()" id="btnSalvarOS">Criar OS</button>
@@ -334,6 +347,16 @@ function fecharAlerta(id) {
       const equipamento = document.getElementById("equipamento").value.trim();
       const defeito = document.getElementById("defeito").value.trim();
       const valor = document.getElementById("valor").value;
+      const itens = {
+      carregador: document.getElementById("itemCarregador").checked,
+      bateria: document.getElementById("itemBateria").checked,
+      bolsa: document.getElementById("itemBolsa").checked,
+      cabo: document.getElementById("itemCabo").checked,
+      fonte: document.getElementById("itemFonte").checked,
+      mouse: document.getElementById("itemMouse").checked,
+      outroCheck: document.getElementById("itemOutroCheck").checked,
+      outroTexto: document.getElementById("itemOutroTexto").value.trim()
+    };
       const obs = document.getElementById("Obs").value;
 
       if (!cliente || !equipamento || !defeito) {
@@ -341,7 +364,7 @@ function fecharAlerta(id) {
         return;
       }
 
-      const dados = { cliente, equipamento, defeito, valor, Obs };
+      const dados = { cliente, equipamento, defeito, valor, obs, itens };
 
       if (id) {
         const osAtual = listaOrdens.find(item => item._id === id);
@@ -363,6 +386,14 @@ function fecharAlerta(id) {
       }
 
       limparFormularioOS();
+      document.getElementById("itemCarregador").checked = false;
+      document.getElementById("itemBateria").checked = false;
+      document.getElementById("itemBolsa").checked = false;
+      document.getElementById("itemCabo").checked = false;
+      document.getElementById("itemFonte").checked = false;
+      document.getElementById("itemMouse").checked = false;
+      document.getElementById("itemOutroCheck").checked = false;
+      document.getElementById("itemOutroTexto").value = "";
       await carregarOS();
       await carregarFinanceiro();
     }
@@ -442,6 +473,10 @@ function fecharAlerta(id) {
               <div><strong>Cliente:</strong><br>${os.cliente}</div>
               <div><strong>Equipamento:</strong><br>${os.equipamento}</div>
               <div><strong>Defeito:</strong><br>${os.defeito}</div>
+              <div>
+               <strong>Itens:</strong><br>
+              ${formatarItens(os.itens)}
+            </div>
               <div><strong>Obs:</strong><br>${os.obs || "-"}</div>
               <div><strong>Valor:</strong><br>${valorFormatado}</div>
             </div>

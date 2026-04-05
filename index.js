@@ -34,6 +34,16 @@ const OS = mongoose.model("OS", {
   status: String,
   valor: Number,
   data: {
+    itens: {
+  carregador: Boolean,
+  bateria: Boolean,
+  bolsa: Boolean,
+  cabo: Boolean,
+  fonte: Boolean,
+  mouse: Boolean,
+  outroCheck: Boolean,
+  outroTexto: String
+},
     type: Date,
     default: Date.now
   }
