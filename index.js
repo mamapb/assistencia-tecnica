@@ -27,6 +27,7 @@ const Cliente = mongoose.model("Cliente", {
 });
 
 const OS = mongoose.model("OS", {
+  numeroOS: Number,
   cliente: String,
   equipamento: String,
   defeito: String,
@@ -69,7 +70,11 @@ app.get("/clientes", async (req, res) => {
 
 app.post("/os", async (req, res) => {
   try {
+    const ultimaOS = await OS.findOne().sort({ numeroOS: -1 });
+    const proximoNumero = ultimaOS ? ultimaOS.numeroOS + 1 : 1001;
+
     const novaOS = await OS.create({
+      numeroOS: proximoNumero,
       cliente: req.body.cliente,
       equipamento: req.body.equipamento,
       defeito: req.body.defeito,
