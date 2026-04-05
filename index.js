@@ -27,23 +27,23 @@ const Cliente = mongoose.model("Cliente", {
 });
 
 const OS = mongoose.model("OS", {
-  obs: String,
   cliente: String,
   equipamento: String,
   defeito: String,
   status: String,
   valor: Number,
+  obs: String,
+  itens: {
+    carregador: Boolean,
+    bateria: Boolean,
+    bolsa: Boolean,
+    cabo: Boolean,
+    fonte: Boolean,
+    mouse: Boolean,
+    outroCheck: Boolean,
+    outroTexto: String
+  },
   data: {
-    itens: {
-  carregador: Boolean,
-  bateria: Boolean,
-  bolsa: Boolean,
-  cabo: Boolean,
-  fonte: Boolean,
-  mouse: Boolean,
-  outroCheck: Boolean,
-  outroTexto: String
-},
     type: Date,
     default: Date.now
   }
@@ -74,6 +74,8 @@ app.post("/os", async (req, res) => {
       equipamento: req.body.equipamento,
       defeito: req.body.defeito,
       valor: Number(req.body.valor) || 0,
+      obs: req.body.obs || "",
+      itens: req.body.itens || {},
       status: "Recebido"
     });
 
@@ -94,15 +96,22 @@ app.get("/os", async (req, res) => {
 
 app.put("/os/:id", async (req, res) => {
   try {
+    const updateData = {
+      cliente: req.body.cliente,
+      equipamento: req.body.equipamento,
+      defeito: req.body.defeito,
+      valor: Number(req.body.valor) || 0,
+      obs: req.body.obs || "",
+      itens: req.body.itens || {}
+    };
+
+    if (req.body.status) {
+      updateData.status = req.body.status;
+    }
+
     const os = await OS.findByIdAndUpdate(
       req.params.id,
-      {
-        cliente: req.body.cliente,
-        equipamento: req.body.equipamento,
-        defeito: req.body.defeito,
-        valor: Number(req.body.valor) || 0,
-        status: req.body.status
-      },
+      updateData,
       { new: true }
     );
 
