@@ -762,7 +762,7 @@
         lista.innerHTML += `
           <li class="os-item">
             <div class="os-topo">
-              <div class="os-id">OS #${os._id}</div>
+              <div class="os-id">OS #${os.numeroOS}</div>
               <span class="${classeStatus(os.status)}">${os.status}</span>
             </div>
 
@@ -940,14 +940,14 @@
         </head>
         <body>
           <div class="cabecalho">
-            <h1>M4M4 Assistência Técnica</h1>
+            <h1>Marcio Assistência Técnica</h1>
             <p>Telefone: (83) 98333833</p>
             <p>Patos - PB</p>
           </div>
 
           <div class="box">
             <h2 style="text-align:center;">ORDEM DE SERVIÇO</h2>
-            <p><strong>Número:</strong> ${os._id}</p>
+            <p><strong>Número:</strong> OS #${os.numeroOS}</p>
             <p><strong>Data:</strong> ${dataAtual}</p>
             <p><strong>Cliente:</strong> ${os.cliente}</p>
             <p><strong>Equipamento:</strong> ${os.equipamento}</p>
