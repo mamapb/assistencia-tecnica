@@ -101,22 +101,23 @@ app.get("/os", async (req, res) => {
 
 app.put("/os/:id", async (req, res) => {
   try {
-    const updateData = {
-      cliente: req.body.cliente,
-      equipamento: req.body.equipamento,
-      defeito: req.body.defeito,
-      valor: Number(req.body.valor) || 0,
-      obs: req.body.obs || "",
-      itens: req.body.itens || {}
-    };
+    const osAtual = await OS.findById(req.params.id);
 
-    if (req.body.status) {
-      updateData.status = req.body.status;
+    if (!osAtual) {
+      return res.status(404).json({ msg: "OS não encontrada" });
     }
 
     const os = await OS.findByIdAndUpdate(
       req.params.id,
-      updateData,
+      {
+        cliente: req.body.cliente ?? osAtual.cliente,
+        equipamento: req.body.equipamento ?? osAtual.equipamento,
+        defeito: req.body.defeito ?? osAtual.defeito,
+        valor: req.body.valor !== undefined ? Number(req.body.valor) : osAtual.valor,
+        obs: req.body.obs ?? osAtual.obs,
+        itens: req.body.itens ?? osAtual.itens,
+        status: req.body.status ?? osAtual.status
+      },
       { new: true }
     );
 
