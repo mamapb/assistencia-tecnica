@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Assistência Técnica Pro</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
   <style>
     * { box-sizing: border-box; font-family: "Segoe UI", Arial, sans-serif; }
@@ -30,12 +31,14 @@
       font-size: 24px;
       font-weight: 700;
       margin-bottom: 8px;
+      text-align: center;
     }
 
     .logo-sub {
       font-size: 13px;
       color: #cbd5e1;
       margin-bottom: 30px;
+      text-align: center;
     }
 
     .menu {
@@ -50,6 +53,16 @@
       border-radius: 14px;
       font-size: 14px;
       color: #e2e8f0;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .menu-item:hover {
+      background: rgba(255,255,255,0.14);
+    }
+
+    .menu-item i {
+      margin-right: 8px;
     }
 
     .content {
@@ -131,6 +144,11 @@
       padding: 22px;
       box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
       border: 1px solid #e2e8f0;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.08);
     }
 
     .card h2 {
@@ -249,6 +267,12 @@
       font-size: 15px;
       color: #0f172a;
       margin-bottom: 4px;
+    }
+
+    .os-lista {
+      max-height: 500px;
+      overflow-y: auto;
+      padding-right: 6px;
     }
 
     .os-item {
@@ -385,6 +409,10 @@
       border-radius: 10px;
     }
 
+    .tela {
+      display: none;
+    }
+
     @media (max-width: 1100px) {
       .layout { grid-template-columns: 1fr; }
       .sidebar { display: none; }
@@ -438,13 +466,24 @@
       <div class="logo">
         <img src="/logo.png" alt="Logo" style="width: 140px;">
       </div>
-      <div class="logo-sub">Assistência Técnica</div>
+      <div class="logo-sub">Marcio Assistência Técnica</div>
 
       <div class="menu">
-        <div class="menu-item">Clientes</div>
-        <div class="menu-item">Ordens de Serviço</div>
-        <div class="menu-item">Financeiro</div>
-        <div class="menu-item">Painel Geral</div>
+        <div class="menu-item" onclick="mostrarTela('painel')">
+          <i class="fa-solid fa-gear"></i> Painel Geral
+        </div>
+
+        <div class="menu-item" onclick="mostrarTela('clientes')">
+          <i class="fa-solid fa-user"></i> Clientes
+        </div>
+
+        <div class="menu-item" onclick="mostrarTela('os')">
+          <i class="fa-solid fa-clipboard"></i> Ordens de Serviço
+        </div>
+
+        <div class="menu-item" onclick="mostrarTela('financeiro')">
+          <i class="fa-solid fa-coins"></i> Financeiro
+        </div>
       </div>
     </aside>
 
@@ -454,7 +493,7 @@
           <h1>Painel da Assistência</h1>
           <p>Controle de clientes, ordens de serviço e ganhos do mês</p>
         </div>
-        <div class="top-info">Sistema operacional da oficina</div>
+        <div class="top-info">Sistema profissional • Controle completo</div>
       </div>
 
       <section class="stats">
@@ -474,87 +513,115 @@
         </div>
       </section>
 
-      <section class="grid">
-        <div class="card">
-          <h2>Cadastrar Cliente</h2>
-
-          <div class="form-grid">
-            <input type="text" id="nome" placeholder="Nome do cliente">
-            <input type="text" id="telefone" placeholder="Telefone">
-            <button class="btn-primary" onclick="cadastrar()">+ Novo Cliente</button>
+      <div id="tela-painel" class="tela">
+        <div class="grid">
+          <div class="card">
+            <h2>Painel Geral</h2>
+            <p>Bem-vindo ao sistema.</p>
+            <p>Use o menu lateral para navegar entre clientes, ordens de serviço e financeiro.</p>
           </div>
 
-          <h3>Clientes</h3>
-          <ul class="clientes-lista" id="lista"></ul>
+          <div class="card alerta-piscando" id="alertasBox">
+            <h2>🚨 OS PARADAS (7+ dias)</h2>
+            <div id="alertasLista">Carregando...</div>
+          </div>
         </div>
+      </div>
 
-        <div class="card">
-          <h2 id="tituloFormulario">Nova Ordem de Serviço</h2>
+      <div id="tela-clientes" class="tela">
+        <section class="grid">
+          <div class="card">
+            <h2>Cadastrar Cliente</h2>
 
-          <div class="form-grid">
-            <input type="hidden" id="osIdEditando">
-            <input type="text" id="clienteOS" placeholder="Nome do cliente" oninput="buscarClientes()">
-            <ul id="sugestoes" class="sugestoes"></ul>
-
-            <input type="text" id="equipamento" placeholder="Equipamento">
-            <input type="text" id="defeito" placeholder="Defeito informado">
-
-            <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:14px; padding:12px;">
-              <strong>Itens deixados pelo cliente</strong><br><br>
-
-              <label><input type="checkbox" id="itemCarregador"> Carregador</label><br>
-              <label><input type="checkbox" id="itemBateria"> Bateria</label><br>
-              <label><input type="checkbox" id="itemBolsa"> Bolsa / Case</label><br>
-              <label><input type="checkbox" id="itemCabo"> Cabo</label><br>
-              <label><input type="checkbox" id="itemFonte"> Fonte</label><br>
-              <label><input type="checkbox" id="itemMouse"> Mouse</label><br>
-              <label><input type="checkbox" id="itemOutroCheck"> Outro</label>
-
-              <input type="text" id="itemOutroTexto" placeholder="Qual outro item?" style="margin-top:10px;">
+            <div class="form-grid">
+              <input type="text" id="nome" placeholder="Nome do cliente">
+              <input type="text" id="telefone" placeholder="Telefone">
+              <button class="btn-primary" onclick="cadastrar()">+ Novo Cliente</button>
             </div>
 
-            <input type="text" id="obs" placeholder="Observações (carregador, bolsa, etc)">
-            <input type="number" id="valor" placeholder="Valor do serviço">
-
-            <button class="btn-primary" onclick="salvarOS()" id="btnSalvarOS">Criar OS</button>
+            <h3>Clientes</h3>
+            <ul class="clientes-lista" id="lista"></ul>
           </div>
-        </div>
+        </section>
+      </div>
 
-        <div class="card financeiro-box">
-          <h2>Financeiro do Mês</h2>
-          <div id="resumoFinanceiro">Carregando...</div>
-          <div class="financeiro-total" id="totalMes">R$ 0,00</div>
-          <div class="financeiro-sub">Somando apenas ordens com status Pronto</div>
-        </div>
+      <div id="tela-os" class="tela">
+        <section class="grid">
+          <div class="card">
+            <h2 id="tituloFormulario">Nova Ordem de Serviço</h2>
 
-        <div class="card alerta-piscando" id="alertasBox">
-          <h2>🚨 OS PARADAS (7+ dias)</h2>
-          <div id="alertasLista">Carregando...</div>
-        </div>
+            <div class="form-grid">
+              <input type="hidden" id="osIdEditando">
+              <input type="text" id="clienteOS" placeholder="Nome do cliente" oninput="buscarClientes()">
+              <ul id="sugestoes" class="sugestoes"></ul>
 
-        <div class="card full">
-          <h2>Ordens de Serviço</h2>
+              <input type="text" id="equipamento" placeholder="Equipamento">
+              <input type="text" id="defeito" placeholder="Defeito informado">
 
-          <div class="busca-box">
-            <input
-              type="text"
-              id="buscaOS"
-              placeholder="Buscar por cliente, equipamento, defeito ou status"
-              oninput="renderizarOS()"
-            >
+              <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:14px; padding:12px;">
+                <strong>Itens deixados pelo cliente</strong><br><br>
+
+                <label><input type="checkbox" id="itemCarregador"> Carregador</label><br>
+                <label><input type="checkbox" id="itemBateria"> Bateria</label><br>
+                <label><input type="checkbox" id="itemBolsa"> Bolsa / Case</label><br>
+                <label><input type="checkbox" id="itemCabo"> Cabo</label><br>
+                <label><input type="checkbox" id="itemFonte"> Fonte</label><br>
+                <label><input type="checkbox" id="itemMouse"> Mouse</label><br>
+                <label><input type="checkbox" id="itemOutroCheck"> Outro</label>
+
+                <input type="text" id="itemOutroTexto" placeholder="Qual outro item?" style="margin-top:10px;">
+              </div>
+
+              <input type="text" id="obs" placeholder="Observações (carregador, bolsa, etc)">
+              <input type="number" id="valor" placeholder="Valor do serviço">
+
+              <button class="btn-primary" onclick="salvarOS()" id="btnSalvarOS">Criar OS</button>
+            </div>
           </div>
 
-          <ul class="os-lista" id="listaOS"></ul>
-        </div>
-      </section>
+          <div class="card full">
+            <h2>Ordens de Serviço</h2>
+
+            <div class="busca-box">
+              <input
+                type="text"
+                id="buscaOS"
+                placeholder="Buscar por número, cliente, equipamento, defeito ou status"
+                oninput="renderizarOS()"
+              >
+            </div>
+
+            <ul class="os-lista" id="listaOS"></ul>
+          </div>
+        </section>
+      </div>
+
+      <div id="tela-financeiro" class="tela">
+        <section class="grid">
+          <div class="card financeiro-box">
+            <h2>Financeiro do Mês</h2>
+            <div id="resumoFinanceiro">Carregando...</div>
+            <div class="financeiro-total" id="totalMes">R$ 0,00</div>
+            <div class="financeiro-sub">Somando apenas ordens com status Pronto</div>
+          </div>
+        </section>
+      </div>
     </main>
   </div>
 
   <script>
     let listaOrdens = [];
     let listaClientes = [];
-
     const SENHA_CORRETA = "25021984";
+
+    function mostrarTela(tela) {
+      document.getElementById("tela-painel").style.display = "none";
+      document.getElementById("tela-clientes").style.display = "none";
+      document.getElementById("tela-os").style.display = "none";
+      document.getElementById("tela-financeiro").style.display = "none";
+
+      document.getElementById("tela-" + tela).style.display = "block";
+    }
 
     function classeStatus(status) {
       if (status === "Pronto") return "status status-pronto";
@@ -697,6 +764,7 @@
       document.getElementById("btnSalvarOS").innerText = "Salvar Alterações";
       document.getElementById("sugestoes").innerHTML = "";
 
+      mostrarTela("os");
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
@@ -748,10 +816,29 @@
       const lista = document.getElementById("listaOS");
       lista.innerHTML = "";
 
-      const filtradas = listaOrdens.filter(os => {
-        const texto = `${os.cliente} ${os.equipamento} ${os.defeito} ${os.status} ${os.obs || ""}`.toLowerCase();
+      const ordensOrdenadas = [...listaOrdens].sort((a, b) => {
+        const na = a.numeroOS || 0;
+        const nb = b.numeroOS || 0;
+        return na - nb;
+      });
+
+      const filtradas = ordensOrdenadas.filter(os => {
+        const texto = `
+          ${os.numeroOS || ""}
+          ${os.cliente || ""}
+          ${os.equipamento || ""}
+          ${os.defeito || ""}
+          ${os.status || ""}
+          ${os.obs || ""}
+        `.toLowerCase();
+
         return texto.includes(busca);
       });
+
+      if (filtradas.length === 0) {
+        lista.innerHTML = `<li class="os-item">Nenhuma OS encontrada.</li>`;
+        return;
+      }
 
       filtradas.forEach(os => {
         const valorFormatado = Number(os.valor || 0).toLocaleString("pt-BR", {
@@ -762,14 +849,14 @@
         lista.innerHTML += `
           <li class="os-item">
             <div class="os-topo">
-              <div class="os-id">OS #${os.numeroOS}</div>
+              <div class="os-id">OS #${os.numeroOS || "-"}</div>
               <span class="${classeStatus(os.status)}">${os.status}</span>
             </div>
 
             <div class="os-detalhes">
-              <div><strong>Cliente:</strong><br>${os.cliente}</div>
-              <div><strong>Equipamento:</strong><br>${os.equipamento}</div>
-              <div><strong>Defeito:</strong><br>${os.defeito}</div>
+              <div><strong>Cliente:</strong><br>${os.cliente || "-"}</div>
+              <div><strong>Equipamento:</strong><br>${os.equipamento || "-"}</div>
+              <div><strong>Defeito:</strong><br>${os.defeito || "-"}</div>
               <div><strong>Itens:</strong><br>${formatarItens(os.itens)}</div>
               <div><strong>Obs:</strong><br>${os.obs || "-"}</div>
               <div><strong>Valor:</strong><br>${valorFormatado}</div>
@@ -947,7 +1034,7 @@
 
           <div class="box">
             <h2 style="text-align:center;">ORDEM DE SERVIÇO</h2>
-            <p><strong>Número:</strong> OS #${os.numeroOS}</p>
+            <p><strong>Número:</strong> OS #${os.numeroOS || "-"}</p>
             <p><strong>Data:</strong> ${dataAtual}</p>
             <p><strong>Cliente:</strong> ${os.cliente}</p>
             <p><strong>Equipamento:</strong> ${os.equipamento}</p>
@@ -960,12 +1047,7 @@
             <br><br>
             <div class="linha">Assinatura do Cliente</div>
             <br><br>
-            <div style="margin-top:30px;">
-             <img src="/assinatura.png" style="width:200px;"><br>
-             ___________________________<br>
-             Assinatura da Assistência
-          
-            </div>
+            <div class="linha">Assinatura da Assistência</div>
           </div>
         </body>
         </html>
@@ -992,6 +1074,7 @@
         document.getElementById("loginTela").style.display = "none";
       }
 
+      mostrarTela("painel");
       await carregar();
       await carregarClientesParaBusca();
       await carregarOS();
