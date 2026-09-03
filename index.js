@@ -2,8 +2,14 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const path = require("path");
+const crypto = require("crypto");
 
 const app = express();
+
+// Proteção específica do Financeiro
+// Senha padrão inicial: 25021984
+const SENHA_FINANCEIRO = process.env.FINANCEIRO_SENHA || "25021984";
+let tokenFinanceiro = null;
 
 app.use(express.json());
 app.use(cors());
@@ -136,7 +142,31 @@ app.delete("/os/:id", async (req, res) => {
   }
 });
 
-app.get("/financeiro/mes", async (req, res) => {
+app.post("/financeiro/login", (req, res) => {
+  const senha = String(req.body?.senha || "");
+
+  if (senha !== SENHA_FINANCEIRO) {
+    return res.status(401).json({ msg: "Senha do financeiro incorreta" });
+  }
+
+  tokenFinanceiro = crypto.randomBytes(32).toString("hex");
+  res.json({ token: tokenFinanceiro });
+});
+
+function protegerFinanceiro(req, res, next) {
+  const autorizacao = req.headers.authorization || "";
+  const token = autorizacao.startsWith("Bearer ")
+    ? autorizacao.slice(7)
+    : "";
+
+  if (!tokenFinanceiro || token !== tokenFinanceiro) {
+    return res.status(401).json({ msg: "Acesso ao financeiro não autorizado" });
+  }
+
+  next();
+}
+
+app.get("/financeiro/mes", protegerFinanceiro, async (req, res) => {
   try {
     const agora = new Date();
     const inicioMes = new Date(agora.getFullYear(), agora.getMonth(), 1);

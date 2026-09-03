@@ -507,10 +507,7 @@
           <div class="stat-value" id="statOS">0</div>
         </div>
 
-        <div class="stat-card stat-green">
-          <div class="stat-title">Total ganho no mês</div>
-          <div class="stat-value" id="statFinanceiro">R$ 0,00</div>
-        </div>
+
       </section>
 
       <div id="tela-painel" class="tela">
@@ -613,14 +610,79 @@
     let listaOrdens = [];
     let listaClientes = [];
     const SENHA_CORRETA = "25021984";
+    let financeiroAutorizado = false;
+    let tokenFinanceiro = sessionStorage.getItem("tokenFinanceiro") || "";
 
-    function mostrarTela(tela) {
+    async function mostrarTela(tela) {
       document.getElementById("tela-painel").style.display = "none";
       document.getElementById("tela-clientes").style.display = "none";
       document.getElementById("tela-os").style.display = "none";
       document.getElementById("tela-financeiro").style.display = "none";
 
+      if (tela === "financeiro") {
+        if (!financeiroAutorizado && tokenFinanceiro) {
+          // Valida o token antes de exibir valores financeiros.
+          const valido = await validarTokenFinanceiro();
+          if (!valido) tokenFinanceiro = "";
+        }
+
+        if (!financeiroAutorizado) {
+          const liberado = await solicitarAcessoFinanceiro();
+          if (!liberado) {
+            document.getElementById("tela-painel").style.display = "block";
+            return;
+          }
+        }
+
+        document.getElementById("tela-financeiro").style.display = "block";
+        await carregarFinanceiro();
+        return;
+      }
+
+      // Ao sair do Financeiro, ele volta a ficar bloqueado.
+      financeiroAutorizado = false;
       document.getElementById("tela-" + tela).style.display = "block";
+    }
+
+    async function solicitarAcessoFinanceiro() {
+      const senha = prompt("🔐 Digite a senha para acessar o Financeiro:");
+
+      if (senha === null) return false;
+
+      try {
+        const res = await fetch("/financeiro/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ senha })
+        });
+
+        if (!res.ok) {
+          alert("❌ Senha do Financeiro incorreta.");
+          return false;
+        }
+
+        const dados = await res.json();
+        tokenFinanceiro = dados.token;
+        sessionStorage.setItem("tokenFinanceiro", tokenFinanceiro);
+        financeiroAutorizado = true;
+        return true;
+      } catch (error) {
+        alert("Não foi possível validar a senha do Financeiro.");
+        return false;
+      }
+    }
+
+    async function validarTokenFinanceiro() {
+      try {
+        const res = await fetch("/financeiro/mes", {
+          headers: { Authorization: `Bearer ${tokenFinanceiro}` }
+        });
+        financeiroAutorizado = res.ok;
+        return res.ok;
+      } catch (error) {
+        financeiroAutorizado = false;
+        return false;
+      }
     }
 
     function classeStatus(status) {
@@ -737,7 +799,6 @@
 
       limparFormularioOS();
       await carregarOS();
-      await carregarFinanceiro();
     }
 
     function editarOS(id) {
@@ -798,7 +859,6 @@
       });
 
       await carregarOS();
-      await carregarFinanceiro();
     }
 
     async function carregarOS() {
@@ -893,11 +953,30 @@
       });
 
       await carregarOS();
-      await carregarFinanceiro();
     }
 
     async function carregarFinanceiro() {
-      const res = await fetch("/financeiro/mes");
+      if (!financeiroAutorizado || !tokenFinanceiro) return;
+
+      const res = await fetch("/financeiro/mes", {
+        headers: { Authorization: `Bearer ${tokenFinanceiro}` }
+      });
+
+      if (res.status === 401) {
+        financeiroAutorizado = false;
+        tokenFinanceiro = "";
+        sessionStorage.removeItem("tokenFinanceiro");
+        alert("🔒 Acesso ao Financeiro expirou. Digite a senha novamente.");
+        document.getElementById("tela-financeiro").style.display = "none";
+        document.getElementById("tela-painel").style.display = "block";
+        return;
+      }
+
+      if (!res.ok) {
+        alert("Erro ao carregar o Financeiro.");
+        return;
+      }
+
       const dados = await res.json();
 
       document.getElementById("resumoFinanceiro").innerHTML =
@@ -909,7 +988,6 @@
       });
 
       document.getElementById("totalMes").innerText = totalFormatado;
-      document.getElementById("statFinanceiro").innerText = totalFormatado;
     }
 
     async function carregarClientesParaBusca() {
@@ -1082,7 +1160,6 @@
       await carregar();
       await carregarClientesParaBusca();
       await carregarOS();
-      await carregarFinanceiro();
     };
   </script>
 </body>
